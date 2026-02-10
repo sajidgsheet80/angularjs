@@ -1,0 +1,51 @@
+<div class="menu-container">
+    <div class="menu-header">
+        <h2>Our Menu</h2>
+        <div class="search-filter">
+            <input type="text" 
+                   ng-model="searchQuery" 
+                   placeholder="Search for dishes..." 
+                   class="search-input">
+        </div>
+    </div>
+
+    <!-- Category Filter -->
+    <div class="category-filter">
+        <button ng-click="filterByCategory('All')" 
+                ng-class="{'active': selectedCategory === 'All'}"
+                class="category-btn">
+            All Items
+        </button>
+        <button ng-repeat="category in categories" 
+                ng-click="filterByCategory(category)" 
+                ng-class="{'active': selectedCategory === category}"
+                class="category-btn">
+            {{category}}
+        </button>
+    </div>
+
+    <!-- Menu Items Grid -->
+    <div class="menu-grid">
+        <div ng-repeat="item in menuItems | filter:itemFilter" class="menu-item">
+            <div class="item-image">{{item.image}}</div>
+            <div class="item-details">
+                <h3>{{item.name}}</h3>
+                <p class="item-description">{{item.description}}</p>
+                <div class="item-footer">
+                    <span class="item-price">{{item.price | currency}}</span>
+                    <button ng-click="addToCart(item)" 
+                            class="add-to-cart-btn"
+                            ng-class="{'btn-added': addedItems[item.id]}">
+                        <span ng-if="!addedItems[item.id]">Add to Cart</span>
+                        <span ng-if="addedItems[item.id]">✓ Added!</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- No results message -->
+    <div ng-if="getFilteredCount() === 0" class="no-results">
+        <p>No items found matching your criteria.</p>
+    </div>
+</div>

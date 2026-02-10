@@ -1,0 +1,124 @@
+<div class="orders-container">
+    <h2>My Orders</h2>
+
+    <div ng-if="!hasOrders()" class="no-orders">
+        <p>You haven't placed any orders yet.</p>
+        <a href="#!/" class="btn-primary">Browse Menu</a>
+    </div>
+
+    <div ng-if="hasOrders()">
+        <div class="orders-list">
+            <div ng-repeat="order in orders | orderBy:'-id'" class="order-card">
+                <div class="order-header">
+                    <div class="order-info">
+                        <h3>Order #{{order.id}}</h3>
+                        <p class="order-date">{{formatDate(order.orderDate)}}</p>
+                    </div>
+                    <div class="order-status">
+                        <span class="status-badge" ng-class="getStatusClass(order.status)">
+                            {{order.status}}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="order-details">
+                    <div class="order-items-summary">
+                        <strong>Items:</strong>
+                        <span ng-repeat="item in order.items">
+                            {{item.name}} ({{item.quantity}}){{$last ? '' : ', '}}
+                        </span>
+                    </div>
+                    <div class="order-total">
+                        <strong>Total:</strong> {{order.total | currency}}
+                    </div>
+                    <div class="order-delivery">
+                        <strong>Estimated Delivery:</strong> {{formatDate(order.estimatedDelivery)}}
+                    </div>
+                </div>
+
+                <button ng-click="viewOrderDetails(order)" class="btn-view-details">
+                    View Details
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div ng-if="selectedOrder" class="modal-overlay" ng-click="closeDetails()">
+        <div class="modal-content" ng-click="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>Order #{{selectedOrder.id}} Details</h2>
+                <button ng-click="closeDetails()" class="close-btn">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="detail-section">
+                    <h3>Order Status</h3>
+                    <div class="status-timeline">
+                        <div class="status-step" ng-class="{'active': selectedOrder.status === 'Pending' || selectedOrder.status === 'Confirmed' || selectedOrder.status === 'Preparing' || selectedOrder.status === 'Out for Delivery' || selectedOrder.status === 'Delivered'}">
+                            <div class="step-icon">1</div>
+                            <div class="step-label">Pending</div>
+                        </div>
+                        <div class="status-step" ng-class="{'active': selectedOrder.status === 'Confirmed' || selectedOrder.status === 'Preparing' || selectedOrder.status === 'Out for Delivery' || selectedOrder.status === 'Delivered'}">
+                            <div class="step-icon">2</div>
+                            <div class="step-label">Confirmed</div>
+                        </div>
+                        <div class="status-step" ng-class="{'active': selectedOrder.status === 'Preparing' || selectedOrder.status === 'Out for Delivery' || selectedOrder.status === 'Delivered'}">
+                            <div class="step-icon">3</div>
+                            <div class="step-label">Preparing</div>
+                        </div>
+                        <div class="status-step" ng-class="{'active': selectedOrder.status === 'Out for Delivery' || selectedOrder.status === 'Delivered'}">
+                            <div class="step-icon">4</div>
+                            <div class="step-label">Out for Delivery</div>
+                        </div>
+                        <div class="status-step" ng-class="{'active': selectedOrder.status === 'Delivered'}">
+                            <div class="step-icon">5</div>
+                            <div class="step-label">Delivered</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Items Ordered</h3>
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in selectedOrder.items">
+                                <td>{{item.image}} {{item.name}}</td>
+                                <td>{{item.quantity}}</td>
+                                <td>{{item.price | currency}}</td>
+                                <td>{{(item.price * item.quantity) | currency}}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3"><strong>Total:</strong></td>
+                                <td><strong>{{selectedOrder.total | currency}}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Delivery Information</h3>
+                    <p><strong>Name:</strong> {{selectedOrder.customerInfo.name}}</p>
+                    <p><strong>Email:</strong> {{selectedOrder.customerInfo.email}}</p>
+                    <p><strong>Phone:</strong> {{selectedOrder.customerInfo.phone}}</p>
+                    <p><strong>Address:</strong> {{selectedOrder.customerInfo.address}}, {{selectedOrder.customerInfo.city}}, {{selectedOrder.customerInfo.zipCode}}</p>
+                    <p><strong>Estimated Delivery:</strong> {{formatDate(selectedOrder.estimatedDelivery)}}</p>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button ng-click="closeDetails()" class="btn-primary">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
