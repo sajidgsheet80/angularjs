@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html ng-app="foodOrderApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Ordering System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header ng-controller="HeaderController">
+            <div class="header-content">
+                <h1>🍕 Delicious Bites</h1>
+                <nav>
+                    <a href="#!/">Menu</a>
+                    <a href="#!/cart" class="cart-link">
+                        Cart <span class="cart-badge" ng-if="cartCount > 0">{{cartCount}}</span>
+                    </a>
+                    <a href="#!/orders">My Orders</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <div ng-view></div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2026 Delicious Bites - Made with AngularJS</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+    <script src="controllers/menuController.js"></script>
+    <script src="controllers/cartController.js"></script>
+    <script src="controllers/ordersController.js"></script>
+    <script src="controllers/headerController.js"></script>
+    <script src="services/cartService.js"></script>
+    <script src="services/orderService.js"></script>
+    <script src="services/menuService.js"></script>
+</body>
+</html>
